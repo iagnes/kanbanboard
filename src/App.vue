@@ -1,13 +1,26 @@
 <template>
   <div class="container mt-5">
     <div class="row">
-      <div class="col-4" v-for="i in 3" :key="i"><StatusCard /></div>
+      <div
+        class="col-4"
+        v-for="statusCard in statusCards"
+        :key="statusCard.status"
+      >
+        <StatusCard
+          :title="statusCard.title"
+          :titleClasses="statusCard.titleClasses"
+          :status="statusCard.status"
+          :newTasks="statusCard.newTasks"
+          :tasks="filteredTasks(statusCard.status)"
+          @new-task="addTask"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import StatusCard from "@/components/StatusCard.vue";
+import StatusCard from "./components/StatusCard.vue";
 export default {
   name: "App",
   components: {
@@ -19,12 +32,12 @@ export default {
         {
           id: 1,
           content: "Dashboard überarbeiten.",
-          status: 0,
+          status: 2,
         },
         {
           id: 2,
           content: "Anwendung auf Vue.js umstellen.",
-          status: 0,
+          status: 1,
         },
       ],
       statusCards: [
@@ -42,16 +55,25 @@ export default {
         },
         {
           title: "Erledigt",
-          titleClasses: "bg-ssuccess text-white",
+          titleClasses: "bg-success text-white",
           newTasks: false,
           status: 2,
         },
       ],
     };
   },
-  computed: {
-    newTasks() {
-      return this.tasks.filter((task) => task.status === 0);
+  // computed: {
+  //   newTasks() {
+  //     return this.tasks.filter((task) => task.status === 0);
+  //   },
+  // },
+  methods: {
+    filteredTasks(status) {
+      return this.tasks.filter((task) => task.status === status);
+    },
+    addTask(task) {
+      task.id = Math.random();
+      this.tasks.push(task);
     },
   },
 };
